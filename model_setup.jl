@@ -1,0 +1,1 @@
+#Set up of the reaction network model using Catalyst.jl
