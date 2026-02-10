@@ -54,17 +54,39 @@ growth_rtc_model = @reaction_network begin
     # no kin -> rh is created via translation
 
     # Antibiotic influx/eflux
-    (pin, pout),                                                        abx <--> abxi        
+    #(pin, pout),                                                        abx <--> abxi        
+    pin * abx,                                                                ∅ --> abxi # before abx
+    pout * abxi,                                                              abxi --> ∅ # before abx
 
     # Ribosome binding antibiotics
-    (kon, koff),                                                        abxi + cri <--> zmri
-    (kon, koff),                                                        abxi + ct <--> zmt
-    (kon, koff),                                                        abxi + cm <--> zmm
-    (kon, koff),                                                        abxi + cq <--> zmq
-    (kon, koff),                                                        abxi + cr <--> zmr
-    (kon, koff),                                                        abxi + ca <--> zma
-    (kon, koff),                                                        abxi + cb <--> zmb
-    
+
+    #(kon, koff),                                                        abxi + cri <--> zmri
+    kon,                                                                abxi + cri --> zmri
+    koff,                                                               zmri --> abxi + cri
+
+    #(kon, koff),                                                        abxi + ct <--> zmt
+    kon,                                                                abxi + ct --> zmt
+    koff,                                                               zmt --> abxi + ct
+
+    #(kon, koff),                                                        abxi + cm <--> zmm
+    kon,                                                                abxi + cm --> zmm
+    koff,                                                               zmm --> abxi + cm
+
+    #(kon, koff),                                                        abxi + cq <--> zmq
+    kon,                                                                abxi + cq --> zmq
+    koff,                                                               zmq --> abxi + cq
+   
+    #(kon, koff),                                                        abxi + cr <--> zmr
+    kon,                                                                abxi + cr --> zmr
+    koff,                                                               zmr --> abxi + cr
+
+    #(kon, koff),                                                        abxi + ca <--> zma
+    kon,                                                                abxi + ca --> zma
+    koff,                                                               zma --> abxi + ca
+
+    #(kon, koff),                                                        abxi + cb <--> zmb
+    kon,                                                                abxi + cb --> zmb
+    koff,                                                               zmb --> abxi + cb
  
     # Damage rate -> scale antibiotic concentration with a factor?
     abxi * kdam,                                                         rh --> rd
@@ -90,7 +112,7 @@ growth_rtc_model = @reaction_network begin
     vrep(b, rt, krep, kb),                                              (crit, ctt, cmt, cqt, crt, cat, cbt) => (cri, ct, cm, cq, cr, ca, cb )
 
     # Dilution add damage complexes!
-    lam(e, gmax, Kgamma, cri, ct, cm, cq, ca, cb, cr, m),               (e, si, abx, abxi, mri, mt, mm, mq, ma, mb, mr, et, em, q, a, b, r, rh, cri, ct, cm, cq, ca, cb, cr, zmri, zmt, zmm, zmq, zma, zmb, zmr, rd, crid, ctd, cmd, cqd, cad, cbd, crd, zmrid, zmtd, zmmd, zmqd, zmad, zmbd, zmrd, rt, crit, ctt, cmt, cqt, cat, cbt, crt, zmrit, zmtt, zmmt, zmqt, zmat, zmbt, zmrt) --> ∅
+    lam(e, gmax, Kgamma, cri, ct, cm, cq, ca, cb, cr, m),               (e, si, abxi, mri, mt, mm, mq, ma, mb, mr, et, em, q, a, b, r, rh, cri, ct, cm, cq, ca, cb, cr, zmri, zmt, zmm, zmq, zma, zmb, zmr, rd, crid, ctd, cmd, cqd, cad, cbd, crd, zmrid, zmtd, zmmd, zmqd, zmad, zmbd, zmrd, rt, crit, ctt, cmt, cqt, cat, cbt, crt, zmrit, zmtt, zmmt, zmqt, zmat, zmbt, zmrt) --> ∅
     
     # Energy consumption during translation
     econ(e, gmax, Kgamma, cri, ct, cm, cq, ca, cb, cr),                 e => ∅
