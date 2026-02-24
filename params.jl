@@ -2,23 +2,26 @@
 sf = (1e6 * 1 /(6.02e23 * 1e-15)) 
 
 kbi_value =  1 / sf # [cell /min molecs], Growth
-#Kgamma_growth = 7 * sf # [molecs /cell], Growth
+kdam_off = 0
+kdam_on = 1e-7
+Kgamma_growth = 7 * sf # [molecs /cell], Growth
 km_value = 1000 * sf # [molecs /cell], Growth
 kon_value = 0.023 
-kon_value_test = 2
 kq_value = 152219 * sf # [molecs /cell], Growth
-kt_value = 1000 #* sf # [molecs], Growth 
+kt_value = 1000 * sf # [molecs], Growth 
 m_value = 1e8 * sf # aa, Growth
 thetari_value = 426.87 * sf	# [molecs /cell], Growth 
 thetatx_value = 4.38 * sf # [molecs /cell], Growth 
 we_value = 4.14 * sf # molecs /min cell, Growth
 wri_value = 930 * sf # molecs /min cell, Growth
 wq_value = 948.93 * sf #molecs /min cell
-s_value = 1e4 #* sf
+s_value = 1e4 * sf
+s_value_e = 1e6 # Elenas s0
+
 
 
 params = Dict(
-    :abx => 0, # µM -> Change
+    :abx => 0, 
     :c => 0.01, # Unitless, Rtc
     :dm => 0.1, # min−1, Growth
     :gmax => 1260, # aa /min molecs
@@ -26,20 +29,20 @@ params = Dict(
     :ka => 20, # µM, Rtc
     :kb => 16, # µM, Rtc
     :kbi => kbi_value, # (min µM)−1, Growth
-    #:kcm => 0.00599, # (min µM)−1, Growth
+    #:kcm => 0.005990373118888, # Test
     :kdeg => 1, # min−1, Rtc
-    :kdam => 0,#1, #?
+    :kdam => kdam_off, # min-1
     :kdiss => 0.006, # min−1, Rtc
-    :Kgamma => 255.73, # µM, 
+    :Kgamma => Kgamma_growth, # µM, 
     :kh => 250, # µM, Rtc
     :km => km_value, # µM, Growth
-    :koff => 2.76 * kon_value, # KD in [min-1]
-    :kon => kon_value, # µM-1 min-1, Antibiotics
+    #:koff => 2.76 * kon_value, # KD in [min-1]
+    #:kon => kon_value, # µM-1 min-1, Antibiotics
     :kq => kq_value, # µM, Growth
     :kr => 0.125, # µM, Rtc
-    :krep => 0,#15.67, # min−1, Rtc
+    :krep => 0, #15.67, # min−1, Rtc
     :kt => kt_value, # µM, Growth
-    :ktag => 0,#9780, # min−1, Rtc
+    :ktag => 0, #9780, # min−1, Rtc
     :kub => 1, # min−1, Growth
     :l => 50, # Unitless, Rtc
     :m => m_value, # aa, Growth
@@ -49,19 +52,38 @@ params = Dict(
     :nri => 7459, # aa/molecs, Growth
     :ns => 0.5, # Unitless, Growth
     :nx => 300, # aa/molecs, Growth 
-    :pin => 1.48, # min-1, Antibiotics
-    :pout => 0.4, # min-1, Antibiotics
+    #:pin => 1.48, # min-1, Antibiotics
+    #:pout => 0.4, # min-1, Antibiotics
     :s => s_value, # µM, Growth
     :thetari => thetari_value,  # µM, Growth
     :thetatx => thetatx_value, # µM, Growth
     :vm	=> 5800, # min−1, Growth 
     :vmax => 39.51, # min−1, Rtc
     :vt => 726, # min−1, Growth
-    :wba => 0,#5e−5, # min−1, Rtc
+    :wba => 0, #5e−5, # min−1, Rtc
     :we => we_value, # µM·min−1, Growth
-    :wr => 0,#1e−6, # µM·min−1, Rtc
+    :wr => 0, #1e−6, # µM·min−1, Rtc
     :wri => wri_value, # µM·min−1, Growth
     :wq	=> wq_value, # µM·min−1, Growth
+)
+
+
+drug_params = Dict(
+    :CHL => Dict(
+        :kon  => 0.023, # [uM-1 min-1]
+        :koff => 2.76 * 0.023, # KD in [min-1]
+        :pin  => 1.48, # min-1
+        :pout => 0.4, # min-1
+        :abx_arr => [0, 2, 4, 6, 8, 12, 16],
+
+    ),
+    :TET => Dict(
+        :kon  => 17.1,
+        :koff => 4.27 * 17.1,
+        :pin  => 28.6,
+        :pout => 1.3,
+        :abx_arr => [0, 0.25, 0.5, 1, 2],
+    )
 )
 
 e_value = 1000.0 * sf # molecs /cell?, Growth

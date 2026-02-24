@@ -1,6 +1,6 @@
 # Defined functions
 # Nutrient import function
-imp(et, vt, s, Kt) = et * vt * s / (Kt + s)
+imp(et, vt, s, kt) = et * vt * s / (kt + s)
 
 # Nutrient metabolism function
 met(em, vm, si, Km) = em * vm * si / (Km + si)
@@ -43,3 +43,14 @@ vrep(b, rt, krep, kb) = (b * rt * krep) / (rt + kb)
 # Growth function
 lam(e, gmax, Kgamma, cri, ct, cm, cq, ca, cb, cr, m) = (gamma(e, gmax, Kgamma) * (cri + ct + cm + cq + ca + cb + cr)) / m
 
+function with_drug(params, drug_params, drug::Symbol; abx=0.0)
+    p = deepcopy(params)
+    dp = drug_params[drug]
+    p[:abx]  = abx
+    p[:pin]  = dp[:pin]
+    p[:pout] = dp[:pout]
+    p[:kon]  = dp[:kon]
+    p[:koff] = dp[:koff]
+
+    return p
+end

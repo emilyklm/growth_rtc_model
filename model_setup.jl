@@ -50,52 +50,27 @@ growth_rtc_model = @reaction_network begin
     tl(cr, e, gmax, Kgamma, nr),                                        cr => rh + mr + r
     tl(ca, e, gmax, Kgamma, na),                                        ca => rh + ma + a
     tl(cb, e, gmax, Kgamma, nb),                                        cb => rh + mb + b
-    
-    # no kin -> rh is created via translation
 
-    # Antibiotic influx/eflux
-    #(pin, pout),                                                        abx <--> abxi        
-    pin * abx,                                                                ∅ --> abxi # before abx
-    pout * abxi,                                                              abxi --> ∅ # before abx
+    # Antibiotic influx/eflux    
+    pin * abx,                                                                ∅ --> abxi 
+    pout * abxi,                                                              abxi --> ∅ 
 
     # Ribosome binding antibiotics
-
-    #(kon, koff),                                                        abxi + cri <--> zmri
-    kon,                                                                abxi + cri --> zmri
-    koff,                                                               zmri --> abxi + cri
-
-    #(kon, koff),                                                        abxi + ct <--> zmt
-    kon,                                                                abxi + ct --> zmt
-    koff,                                                               zmt --> abxi + ct
-
-    #(kon, koff),                                                        abxi + cm <--> zmm
-    kon,                                                                abxi + cm --> zmm
-    koff,                                                               zmm --> abxi + cm
-
-    #(kon, koff),                                                        abxi + cq <--> zmq
-    kon,                                                                abxi + cq --> zmq
-    koff,                                                               zmq --> abxi + cq
-   
+    (kon, koff),                                                        abxi + cri <--> zmri
+    (kon, koff),                                                        abxi + ct <--> zmt
+    (kon, koff),                                                        abxi + cm <--> zmm
+    (kon, koff),                                                        abxi + cq <--> zmq
     #(kon, koff),                                                        abxi + cr <--> zmr
-    kon,                                                                abxi + cr --> zmr
-    koff,                                                               zmr --> abxi + cr
-
     #(kon, koff),                                                        abxi + ca <--> zma
-    kon,                                                                abxi + ca --> zma
-    koff,                                                               zma --> abxi + ca
-
     #(kon, koff),                                                        abxi + cb <--> zmb
-    kon,                                                                abxi + cb --> zmb
-    koff,                                                               zmb --> abxi + cb
- 
+
     # Damage rate -> scale antibiotic concentration with a factor?
-    abxi * kdam,                                                         rh --> rd
+    #abxi * kdam,                                                         rh --> rd
     # Damage of ribosome complex
-    abxi * kdam,                                                         (cri, ct, cm, cq, cr, ca, cb) --> (crid, ctd, cmd, cqd, crd, cad, cbd)
+    #abxi * kdam,                                                         (cri, ct, cm, cq, cr, ca, cb) --> (crid, ctd, cmd, cqd, crd, cad, cbd)
     # Damage of ribosome-antibiotic complex 
-    abxi * kdam,                                                         (zmri, zmt, zmm, zmq, zmr, zma, zmb) --> (zmrid, zmtd, zmmd, zmqd, zmrd, zmad, zmbd)
-
-
+    #abxi * kdam,                                                         (zmri, zmt, zmm, zmq, zmr, zma, zmb) --> (zmrid, zmtd, zmmd, zmqd, zmrd, zmad, zmbd)
+    
     # Degradation of damaged RNA
     kdeg,                                                               rd --> ∅
     kdeg,                                                               (zmrid, zmtd, zmmd, zmqd, zmrd, zmad, zmbd) --> ∅
