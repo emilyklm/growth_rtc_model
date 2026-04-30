@@ -1,12 +1,12 @@
 # Definition of the parameters and initial conditions for the model 
+# Conversion from [molecs /cell] -> µM
 sf = (1e6 * 1 /(6.02e23 * 1e-15)) 
 
 kbi_value =  1 / sf # [cell /min molecs], Growth
-kdam_off = 0
-kdam_on = 1e-7
+kdam_off = 0 
+kdam_on = 1e-5
 Kgamma_growth = 7 * sf # [molecs /cell], Growth
 km_value = 1000 * sf # [molecs /cell], Growth
-kon_value = 0.023 
 kq_value = 152219 * sf # [molecs /cell], Growth
 kt_value = 1000 * sf # [molecs], Growth 
 m_value = 1e8 * sf # aa, Growth
@@ -21,60 +21,55 @@ s_value_e = 1e6 # Elenas s0
 
 
 params = Dict(
-    :abx => 0, 
-    :c => 0.01, # Unitless, Rtc
-    :dm => 0.1, # min−1, Growth
-    :gmax => 1260, # aa /min molecs
-    :hq => 4, # Unitless, Growth
-    :ka => 20, # µM, Rtc
-    :kb => 16, # µM, Rtc
-    :kbi => kbi_value, # (min µM)−1, Growth
-    #:kcm => 0.005990373118888, # Test
-    :kdeg => 1, # min−1, Rtc
-    :kdam => kdam_off, # min-1
-    :kdiss => 0.006, # min−1, Rtc
-    :Kgamma => Kgamma_growth, # µM, 
-    :kh => 250, # µM, Rtc
-    :km => km_value, # µM, Growth
-    #:koff => 2.76 * kon_value, # KD in [min-1]
-    #:kon => kon_value, # µM-1 min-1, Antibiotics
-    :kq => kq_value, # µM, Growth
-    :kr => 0.125, # µM, Rtc
-    :krep => 0, #15.67, # min−1, Rtc
-    :kt => kt_value, # µM, Growth
-    :ktag => 0, #9780, # min−1, Rtc
-    :kub => 1, # min−1, Growth
-    :l => 50, # Unitless, Rtc
-    :m => m_value, # aa, Growth
-    :na => 338, # aa, Rtc
-    :nb => 408, # aa, Rtc
-    :nr => 532 * 6, # aa, Rtc
-    :nri => 7459, # aa/molecs, Growth
-    :ns => 0.5, # Unitless, Growth
-    :nx => 300, # aa/molecs, Growth 
-    #:pin => 1.48, # min-1, Antibiotics
-    #:pout => 0.4, # min-1, Antibiotics
-    :s => s_value, # µM, Growth
-    :thetari => thetari_value,  # µM, Growth
-    :thetatx => thetatx_value, # µM, Growth
-    :vm	=> 5800, # min−1, Growth 
+    :abx => 0, # external antibiotics
+    :c => 0.01, # Unitless, Ratio of dissociation constants, Rtc
+    :dm => 0.1, # min−1, mRNA degradation, Growth
+    :gmax => 1260, # aa /min molecs, max. transl. elongation rate, both
+    :hq => 4, # Unitless, q-autoinhibition Hill coeﬀ., Growth
+    :ka => 20, # µM, Michaelis constant of RtcA for ATP, Rtc
+    :kb => 16, # µM, Michaelis constant of RtcB for ATP, Rtc
+    :kbi => kbi_value, # (min µM)−1, mRNA-ribosome binding rate, Growth
+    :kdeg => 1, # min−1, Degradation of damaged RNA, Rtc
+    :kdam => kdam_off, # min-1, Damage rate
+    :kdiss => 0.006, # min−1, Holoenzyme dissociation, Rtc
+    :Kgamma => Kgamma_growth, # µM, transl. elongation threshold 
+    :kh => 250, # µM, Michaelis constant for open complex formation, Rtc
+    :km => km_value, # µM, enzymatic threshold, Growth
+    :kq => kq_value, # µM, q-autoinhibition threshold, Growth
+    :kr => 0.125, # µM, Affinity of active state for the ligand, Rtc
+    :krep => 15.67, # min−1, Repair rate of RtcB, Rtc
+    :kt => kt_value, # µM, nutrient import threshold, Growth
+    :ktag => 9780, # min−1, Tagging rate of RtcA, Rtc
+    :kub => 1, # min−1, mRNA-ribosome unbinding rate, Growth
+    :l => 50, # Unitless, Allosteric constant, Rtc
+    :m => m_value, # aa, total cell mass, Growth
+    :na => 338, # aa, Length of rtcA Protein, Rtc
+    :nb => 408, # aa, Length of rtcB Protein, Rtc
+    :nr => 532 * 6, # aa, Length of rtcR Protein, Rtc
+    :nri => 7459, # aa/molecs, Length of ribosome, Growth
+    :ns => 0.5, # Unitless, nutrient quality, Growth
+    :nx => 300, # aa/molecs, Length of protein, Growth 
+    :s => s_value, # µM, nutrient (extracellular), Growth
+    :thetari => thetari_value,  # µM, ribosome transcription threshold, Growth
+    :thetatx => thetatx_value, # µM, non-ribosomal transcription threshold, Growth
+    :vm	=> 5800, # min−1, max. enzymatic rate, Growth 
     :vmax => 39.51, # min−1, Rtc
-    :vt => 726, # min−1, Growth
-    :wba => 0, #5e−5, # min−1, Rtc
-    :we => we_value, # µM·min−1, Growth
-    :wr => 0, #1e−6, # µM·min−1, Rtc
-    :wri => wri_value, # µM·min−1, Growth
-    :wq	=> wq_value, # µM·min−1, Growth
+    :vt => 726, # min−1, Maximal rate of open complex formation, Growth
+    :wba => 5e−5, # min−1, Maximal transcription rate of RtcBA, Rtc
+    :we => we_value, # µM·min−1, max. (transport & metabolism) enzyme transcription rate, Growth
+    :wr => 1e−6, # µM·min−1, Max. transcription rate of RtcR, Rtc
+    :wri => wri_value, # µM·min−1, max. ribosome transcription rate, Growth
+    :wq	=> wq_value, # µM·min−1, max. q-transcription rate, Growth
 )
 
 
 drug_params = Dict(
     :CHL => Dict(
-        :kon  => 0.023, # [uM-1 min-1]
-        :koff => 2.76 * 0.023, # KD in [min-1]
-        :pin  => 1.48, # min-1
-        :pout => 0.4, # min-1
-        :abx_arr => [0, 2, 4, 6, 8, 12, 16],
+        :kon  => 0.023, # [uM-1 min-1], Chloramphenicol-binding rate 
+        :koff => 2.76 * 0.023, # KD in [min-1], Chloramphenicol-unbinding rate 
+        :pin  => 1.48, # min-1, Import rate of Chloramphenicol
+        :pout => 0.4, # min-1, Export rate of Chloramphenicol
+        :abx_arr => [0, 2, 4, 6, 8, 12, 16], # µM
 
     ),
     :TET => Dict(
@@ -82,17 +77,18 @@ drug_params = Dict(
         :koff => 4.27 * 17.1,
         :pin  => 28.6,
         :pout => 1.3,
-        :abx_arr => [0, 0.25, 0.5, 1, 2],
+        :abx_arr => [0, 0.4, 0.8, 1.2, 1.6, 2], # µM
+        #:abx_arr => [0, 0.25, 0.5, 1, 2],
     )
 )
 
 e_value = 1000.0 * sf # molecs /cell?, Growth
-rh_value = 10 * sf
-rh_value_r = 11.29
+rh_value = 10 * sf # Growth
+rh_value_r = 11.29 # Rtc
 
 u0 = Dict(
     :ma => 0.0, :mb => 0.0, :mm => 0.0, :mq => 0.0, :mr => 0.0, :mri => 0.0, :mt => 0.0, # mRNAs
-    :a => 0.0, :b => 0.0, :em => 0.0, :et => 0.0, :q => 0.0, :r => 0.0, :rh => rh_value, # Proteins, rh (growth)
+    :a => 0.0, :b => 0.0, :em => 0.0, :et => 0.0, :q => 0.0, :r => 0.0, :rh => rh_value_r, # Proteins, rh (growth)
     :ca => 0.0, :cb => 0.0, :cm => 0.0, :cq => 0.0, :cr => 0.0, :cri => 0.0, :ct => 0.0, # Ribosome-mRNA complexes
     :cad => 0.0, :cbd => 0.0, :cmd => 0.0, :cqd => 0.0, :crd => 0.0, :crid => 0.0, :ctd => 0.0, # Damaged ribosome-mRNA complexes
     :cat => 0.0, :cbt => 0.0, :cmt => 0.0, :cqt => 0.0, :crt => 0.0, :crit => 0.0, :ctt => 0.0, # Tagged ribosome-mRNA complexes

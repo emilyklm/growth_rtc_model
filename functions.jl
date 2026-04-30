@@ -1,4 +1,5 @@
 # Defined functions
+
 # Nutrient import function
 imp(et, vt, s, kt) = et * vt * s / (kt + s)
 
@@ -19,7 +20,7 @@ function active_rtcr(r, l, c, rt, kr)
 end
 
 # Transcription function for rtca, rtcb, thetatx different for mr
-function txab(vmax, kh, kdiss, r, l, c, rt, kr, wx, e, thetatx)         # a is not a parameter anymore
+function txab(vmax, kh, kdiss, r, l, c, rt, kr, wx, e, thetatx)         # e is not a parameter anymore
     voc = (vmax * e) / (kh + e)                                           # Conversion rate of sigma
     sigmao = (active_rtcr(r, l, c, rt, kr) * voc) / kdiss
     return sigmao * tx(wx, e, thetatx)
@@ -28,7 +29,7 @@ end
 # Gamma function
 gamma(e, gmax, Kgamma) = (gmax * e) / (Kgamma + e)
 
-# Translation rate function for all translations -> Add rtc mRNA to buid a ribosome-RNA complex! kc * rh * mx -> cx from tl(nx, kc, rh, mx, gmax, atp, thetatl) = (1 / nx) * kc * rh * mx * ((gmax * atp) / (thetatl + atp)) 
+# Translation rate function for all translations -> Add rtc mRNA to buid a ribosome-RNA complex! 
 tl(cx, e, gmax, Kgamma, nx) = cx * (gamma(e, gmax, Kgamma) / nx)
 
 # Energy consumption during translation
@@ -43,6 +44,13 @@ vrep(b, rt, krep, kb) = (b * rt * krep) / (rt + kb)
 # Growth function
 lam(e, gmax, Kgamma, cri, ct, cm, cq, ca, cb, cr, m) = (gamma(e, gmax, Kgamma) * (cri + ct + cm + cq + ca + cb + cr)) / m
 
+# Antibiotic binding
+bin(cx, abxi, kon) = cx * abxi * kon
+
+# Antibiotic unbinding
+unbin(zmx, koff) = zmx * koff
+
+# Other functions
 function with_drug(params, drug_params, drug::Symbol; abx=0.0)
     p = deepcopy(params)
     dp = drug_params[drug]

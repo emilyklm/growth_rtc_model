@@ -5,7 +5,7 @@ growth_rtc_model = @reaction_network begin
     # Import nutrient                                   
     imp(et, vt, s, kt),                                                 ∅ => si
 
-    # Metabolization nutrient
+    # Metabolisation of nutrient
     met(em, vm, si, km),                                                si => ∅
     met(em, vm, si, km) * ns,                                           ∅ => e
 
@@ -17,10 +17,10 @@ growth_rtc_model = @reaction_network begin
     tx(wr, e, thetatx),                                                 ∅ => mr
     txab(vmax, kh, kdiss, r, l, c, rt, kr, wba, e, thetatx),            ∅ => (ma, mb)
 
-    # degradation -> or use only one?
+    # Degradation 
     dm,                                                                (mri, mt, mm, mq, mr, ma, mb) --> ∅ 
 
-    # ribosome binding of mRNA
+    # Ribosome binding mRNA
     kbi,                                                                rh + mri --> cri
     kub,                                                                cri --> rh + mri
 
@@ -51,25 +51,34 @@ growth_rtc_model = @reaction_network begin
     tl(ca, e, gmax, Kgamma, na),                                        ca => rh + ma + a
     tl(cb, e, gmax, Kgamma, nb),                                        cb => rh + mb + b
 
-    # Antibiotic influx/eflux    
-    pin * abx,                                                                ∅ --> abxi 
-    pout * abxi,                                                              abxi --> ∅ 
+    # Antibiotic influx/efflux    
+    
+    (abx * pin, pout),                                                  ∅ <--> abxi
 
     # Ribosome binding antibiotics
-    (kon, koff),                                                        abxi + cri <--> zmri
-    (kon, koff),                                                        abxi + ct <--> zmt
-    (kon, koff),                                                        abxi + cm <--> zmm
-    (kon, koff),                                                        abxi + cq <--> zmq
-    #(kon, koff),                                                        abxi + cr <--> zmr
-    #(kon, koff),                                                        abxi + ca <--> zma
-    #(kon, koff),                                                        abxi + cb <--> zmb
+    bin(cri, abxi, kon),                                                abxi + cri => zmri
+    bin(ct, abxi, kon),                                                 abxi + ct => zmt 
+    bin(cm, abxi, kon),                                                 abxi + cm => zmm
+    bin(cq, abxi, kon),                                                 abxi + cq => zmq
+    bin(cr, abxi, kon),                                                 abxi + cr => zmr
+    bin(ca, abxi, kon),                                                 abxi + ca => zma
+    bin(cb, abxi, kon),                                                 abxi + cb => zmb
 
-    # Damage rate -> scale antibiotic concentration with a factor?
-    #abxi * kdam,                                                         rh --> rd
+    # Ribosome unbinding antibiotic
+    unbin(zmri, koff),                                                  zmri => abxi + cri 
+    unbin(zmt, koff),                                                   zmt => abxi + ct
+    unbin(zmm, koff),                                                   zmm => abxi + cm
+    unbin(zmq, koff),                                                   zmq => abxi + cq
+    unbin(zmr, koff),                                                   zmr => abxi + cr
+    unbin(zma, koff),                                                   zma => abxi + ca
+    unbin(zmb, koff),                                                   zmb => abxi + cb
+
+    # Damage rate 
+    abxi * kdam,                                                         rh --> rd
     # Damage of ribosome complex
-    #abxi * kdam,                                                         (cri, ct, cm, cq, cr, ca, cb) --> (crid, ctd, cmd, cqd, crd, cad, cbd)
+    abxi * kdam,                                                         (cri, ct, cm, cq, cr, ca, cb) --> (crid, ctd, cmd, cqd, crd, cad, cbd)
     # Damage of ribosome-antibiotic complex 
-    #abxi * kdam,                                                         (zmri, zmt, zmm, zmq, zmr, zma, zmb) --> (zmrid, zmtd, zmmd, zmqd, zmrd, zmad, zmbd)
+    abxi * kdam,                                                         (zmri, zmt, zmm, zmq, zmr, zma, zmb) --> (zmrid, zmtd, zmmd, zmqd, zmrd, zmad, zmbd)
     
     # Degradation of damaged RNA
     kdeg,                                                               rd --> ∅
@@ -86,9 +95,9 @@ growth_rtc_model = @reaction_network begin
     vrep(b, rt, krep, kb),                                              (zmrit, zmtt, zmmt, zmqt, zmrt, zmat, zmbt) => (zmri, zmt, zmm, zmq, zmr, zma, zmb)
     vrep(b, rt, krep, kb),                                              (crit, ctt, cmt, cqt, crt, cat, cbt) => (cri, ct, cm, cq, cr, ca, cb )
 
-    # Dilution add damage complexes!
+    # Dilution
     lam(e, gmax, Kgamma, cri, ct, cm, cq, ca, cb, cr, m),               (e, si, abxi, mri, mt, mm, mq, ma, mb, mr, et, em, q, a, b, r, rh, cri, ct, cm, cq, ca, cb, cr, zmri, zmt, zmm, zmq, zma, zmb, zmr, rd, crid, ctd, cmd, cqd, cad, cbd, crd, zmrid, zmtd, zmmd, zmqd, zmad, zmbd, zmrd, rt, crit, ctt, cmt, cqt, cat, cbt, crt, zmrit, zmtt, zmmt, zmqt, zmat, zmbt, zmrt) --> ∅
-    
+
     # Energy consumption during translation
     econ(e, gmax, Kgamma, cri, ct, cm, cq, ca, cb, cr),                 e => ∅
 end
